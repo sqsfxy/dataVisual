@@ -1,0 +1,50 @@
+[[
+  {
+  "title": "首页",
+  "icon": "layui-icon-home",
+    "open": true,
+    "list": [{
+      "title": "快速开始",
+      "href": "/doc/quickstart.html"
+    },{
+      "title": "快速开始",
+      "href": "/doc/quickstart.html"
+    },{
+      "title": "快速开始",
+      "href": "/doc/quickstart.html"
+    },{
+      "title": "快速开始",
+      "href": "/doc/quickstart.html"
+    },{
+      "title": "快速开始",
+      "href": "/doc/quickstart.html"
+    },{
+      "title": "快速开始",
+      "href": "/doc/quickstart.html"
+    },{
+      "title": "快速开始",
+      "href": "/doc/quickstart.html"
+    }
+    ]
+  },
+  {
+  "title": "项目文档",
+  "open": true,
+  "list": [{
+    "title": "快速开始",
+    "href": "/doc/quickstart.html"
+  },
+  {
+    "title": "菜单操作",
+    "href": "/doc/menu.html"
+  }, {
+    "title": "标签操作",
+    "href": "/doc/tabs.html"
+  }, {
+    "title": "其他操作",
+    "href": "/doc/other.html"
+  }, {
+    "title": "更新日志",
+    "href": "/doc/changelog.html"
+  }]
+}]]

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>折线图</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">基本关系图</div>
+            <div class="layui-card-body" style="position:relative;">
+                <div id="main1" style="width: 100%;height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">层级关系图</div>
+            <div class="layui-card-body" style="position:relative;">
+                <div id="main2" style="width: 100%;height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+    <!--    <div class="layui-col-md12">-->
+    <!--        <div class="layui-card">-->
+    <!--            <div class="layui-card-header">堆叠折线图</div>-->
+    <!--            <div class="layui-card-body" style="position:relative;">-->
+    <!--                <div id="main3" style="width: 100%;height: 400px;"></div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+</div>
+
+
+
+</div>
+<script src="/static/layui/layui.js"></script>
+<script src="/static/echarts/echarts.min.js"></script>
+<script>
+    layui.config({base: '/static/'}).extend({common: 'js/common'}).use(['jquery', 'common', 'element'], function() {
+        var element = layui.element;
+        var $ = layui.jquery;
+
+        var myChart1 = echarts.init($('#main1')[0]);
+        var myChart2 = echarts.init($('#main2')[0]);
+        // var myChart3 = echarts.init($('#main3')[0]);
+
+        // 指定图表的配置项和数据
+
+        var data = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n']
+        var lines = [
+            ['a', 'b'],
+            ['d', 'c'],
+            ['c', 'b'],
+            ['a', 'f'],
+            ['m', 'h'],
+            ['d', 'n'],
+            ['f', 'b'],
+            ['n', 'e'],
+            ['l', 'j'],
+            ['k', 'g'],
+            ['h', 'a'],
+            ['i', 'e'],
+            ['j', 'l']
+        ];
+        var color = ['#E27471', '#00C8FF', '#E6AF15', '#00E3F3', '#CF83F4', '#6B81E1', '#00FBAE']
+// 以上为所有配置项
+        var angle = {};
+        for (var i = 0; i < data.length; i++) {
+            angle[data[i]] = (360 / data.length * i)
+        }
+
+// 点数据
+
+        var nodes = [];
+
+        data.forEach((d, index) => {
+            nodes.push({
+                name: d,
+                value: [1, angle[d]],
+                itemStyle: {
+                    color: color[index % color.length]
+                }
+            })
+        });
+// 线数据
+
+        var linesData = [];
+
+        lines.forEach(d => {
+            linesData.push({
+                coords: [
+                    [1, angle[d[0]]],
+                    [1, angle[d[1]]]
+                ]
+            })
+        });
+
+        var option1 = {
+            // title: {
+            //     text: 'graph+lines'
+            // },
+            polar: {},
+            radiusAxis: {
+                show: false
+            },
+            angleAxis: {
+                type: 'value',
+                show: false
+            },
+            series: [
+                {
+                    type: 'graph',
+                    coordinateSystem: 'polar',
+                    label: {
+                        show: true,
+                        position: 'outside',
+                        fontSize: 14
+                    },
+                    symbolSize: 15,
+                    nodes: nodes
+                },
+                {
+                    type: 'lines',
+                    coordinateSystem: 'polar',
+                    lineStyle: {
+                        color: '#a6c84c',
+                        width: 1,
+                        opacity: 0.6,
+                        curveness: 0.5
+                    },
+                    // effect: {
+                    //     show: true,
+                    //     symbol: 'triangle',
+                    //     symbolSize: 10
+                    // },
+                    data: linesData
+                }
+            ]
+        };
+
+        // var data = [
+        //     [[28604,77,17096869,'Australia',1990],[31163,77.4,27662440,'Canada',1990],[1516,68,1154605773,'China',1990],[13670,74.7,10582082,'Cuba',1990],[28599,75,4986705,'Finland',1990],[29476,77.1,56943299,'France',1990],[31476,75.4,78958237,'Germany',1990],[28666,78.1,254830,'Iceland',1990],[1777,57.7,870601776,'India',1990],[29550,79.1,122249285,'Japan',1990],[2076,67.9,20194354,'North Korea',1990],[12087,72,42972254,'South Korea',1990],[24021,75.4,3397534,'New Zealand',1990],[43296,76.8,4240375,'Norway',1990],[10088,70.8,38195258,'Poland',1990],[19349,69.6,147568552,'Russia',1990],[10670,67.3,53994605,'Turkey',1990],[26424,75.7,57110117,'United Kingdom',1990],[37062,75.4,252847810,'United States',1990]],
+        //     [[44056,81.8,23968973,'Australia',2015],[43294,81.7,35939927,'Canada',2015],[13334,76.9,1376048943,'China',2015],[21291,78.5,11389562,'Cuba',2015],[38923,80.8,5503457,'Finland',2015],[37599,81.9,64395345,'France',2015],[44053,81.1,80688545,'Germany',2015],[42182,82.8,329425,'Iceland',2015],[5903,66.8,1311050527,'India',2015],[36162,83.5,126573481,'Japan',2015],[1390,71.4,25155317,'North Korea',2015],[34644,80.7,50293439,'South Korea',2015],[34186,80.6,4528526,'New Zealand',2015],[64304,81.6,5210967,'Norway',2015],[24787,77.3,38611794,'Poland',2015],[23038,73.13,143456918,'Russia',2015],[19360,76.5,78665830,'Turkey',2015],[38225,81.4,64715810,'United Kingdom',2015],[53354,79.1,321773631,'United States',2015]]
+        // ];
+
+        var myGraphData = [
+            { "parentNode":"张三", "childNodes":["小明", "小华", "小杰", "小婷","小妍","小飞"]},
+            { "parentNode":"小明", "childNodes":[ "小王", "小赵", "小钱" ] },
+            { "parentNode":"小华", "childNodes":[ "小孙", "小李", "小周" ] },
+            { "parentNode":"小杰", "childNodes":[ "小吴", "小郑" ] },
+            { "parentNode":"小婷", "childNodes":[ "小谢", "小潘" ] },
+            { "parentNode":"小妍", "childNodes":[ "小苏", "小陈" ] },
+            { "parentNode":"小飞", "childNodes":[ "小郭", "小彭" ] }
+
+        ];
+
+        function setNodeData(arr, m, n ,listdata) {
+            var size = 33;
+            for(var i=0; i<arr.length; i++){
+                listdata.push({
+                    id : m++,
+                    category: n,
+                    name: arr[i],
+                    symbolSize: size,
+                    draggable: "true"
+                });
+            }
+        }
+
+        function setLinkData(sourceList, m, links) {
+            for(var i=0; i<sourceList.length; i++){
+                links.push({
+                    "source": sourceList[i],
+                    "target": m,
+                    lineStyle: {
+                        normal: {
+                            color: 'source',
+                        }
+                    }
+                })
+            }
+        }
+
+        var listdata = [];
+        var linksdata = [];
+
+        var nodeData = myGraphData;
+        var m = 0;
+        var source = [];
+        for(var i=1; i < nodeData.length; i++){
+            var node = nodeData[i].parentNode;
+            var tx = [node];
+            setNodeData( tx, m, 1, listdata);
+            source.push(m);
+
+            var Data = nodeData[i].childNodes;
+            setNodeData( Data, m+1, 2, listdata);
+
+            var sourceList = [];
+            for(var n = m+1; n < m + Data.length + 1; n++){
+                sourceList.push(n);
+            }
+            setLinkData( sourceList, m, linksdata);
+            m = m + Data.length + 1;
+        }
+
+        var tx7 = [];
+        tx7.push(nodeData[0].parentNode);
+        setNodeData(tx7, m, 0, listdata);
+        setLinkData(source, m, linksdata);
+
+        var option2 = {
+            title: {
+                text: "张三的朋友和他朋友的朋友",
+                top: "top",
+                left: "left",
+                textStyle: {
+                    color: '#292421'
+                }
+            },
+            tooltip: {
+                formatter: '{b}'
+            },
+            backgroundColor: '#FFFFFF',
+            legend: {
+                show : true,
+                data : [ {
+                    name : '父节点',
+                    icon : 'rect'
+                },
+                    {
+                        name : '层级二',
+                        icon : 'roundRect'
+                    }, {
+                        name : '层级三',
+                        icon : 'circle'
+                    } ],
+                textStyle: {
+                    color: '#292421'
+                },
+                icon: 'circle',
+                type: 'scroll',
+                orient: 'horizontal',
+                left: 10,
+                top: 20,
+                bottom: 20,
+                itemWidth: 10,
+                itemHeight: 10
+            },
+            animationDuration: 0,
+            animationEasingUpdate: 'quinticInOut',
+            series: [{
+                name: '知识图谱',
+                type: 'graph',
+                layout: 'force',
+                force: {
+                    repulsion: 300,
+                    gravity: 0.1,
+                    edgeLength: 15,
+                    layoutAnimation: true,
+                },
+                data: listdata,
+                links: linksdata,
+                categories:[
+                    {
+                        name : '父节点',
+                        symbol : 'rect',
+                        label : {
+                        }
+                    }, {
+                        name : '层级二',
+                        symbol : 'rect'
+                    }, {
+                        name : '层级三',
+                        symbol : 'roundRect'
+                    }],
+                roam: true,
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'bottom',
+                        formatter: '{b}',
+                        fontSize: 10,
+                        fontStyle: '600',
+                    }
+                },
+                lineStyle: {
+                    normal: {
+                        opacity: 0.9,
+                        width: 1.5,
+                        curveness: 0
+                    }
+                }
+            }]
+        };
+
+        // var option3 = {
+        //     title: {
+        //         text: '堆叠区域图'
+        //     },
+        //     tooltip : {
+        //         trigger: 'axis',
+        //         axisPointer: {
+        //             type: 'cross',
+        //             label: {
+        //                 backgroundColor: '#6a7985'
+        //             }
+        //         }
+        //     },
+        //     legend: {
+        //         data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+        //     },
+        //     toolbox: {
+        //         feature: {
+        //             saveAsImage: {}
+        //         }
+        //     },
+        //     grid: {
+        //         left: '3%',
+        //         right: '4%',
+        //         bottom: '3%',
+        //         containLabel: true
+        //     },
+        //     xAxis : [
+        //         {
+        //             type : 'category',
+        //             boundaryGap : false,
+        //             data : ['周一','周二','周三','周四','周五','周六','周日']
+        //         }
+        //     ],
+        //     yAxis : [
+        //         {
+        //             type : 'value'
+        //         }
+        //     ],
+        //     series : [
+        //         {
+        //             name:'邮件营销',
+        //             type:'line',
+        //             stack: '总量',
+        //             areaStyle: {},
+        //             data:[120, 132, 101, 134, 90, 230, 210]
+        //         },
+        //         {
+        //             name:'联盟广告',
+        //             type:'line',
+        //             stack: '总量',
+        //             areaStyle: {},
+        //             data:[220, 182, 191, 234, 290, 330, 310]
+        //         },
+        //         {
+        //             name:'视频广告',
+        //             type:'line',
+        //             stack: '总量',
+        //             areaStyle: {},
+        //             data:[150, 232, 201, 154, 190, 330, 410]
+        //         },
+        //         {
+        //             name:'直接访问',
+        //             type:'line',
+        //             stack: '总量',
+        //             areaStyle: {normal: {}},
+        //             data:[320, 332, 301, 334, 390, 330, 320]
+        //         },
+        //         {
+        //             name:'搜索引擎',
+        //             type:'line',
+        //             stack: '总量',
+        //             label: {
+        //                 normal: {
+        //                     show: true,
+        //                     position: 'top'
+        //                 }
+        //             },
+        //             areaStyle: {normal: {}},
+        //             data:[820, 932, 901, 934, 1290, 1330, 1320]
+        //         }
+        //     ]
+        // };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart1.setOption(option1);
+        myChart2.setOption(option2);
+        // myChart3.setOption(option3);
+        window.addEventListener("resize", function () {
+            myChart1.resize();
+            myChart2.resize();
+            // myChart3.resize();
+            //myCharts是你的初始化echarts图表时取的名字
+        });
+    });
+</script>
+</body>
+</html>

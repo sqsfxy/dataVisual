@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>折线图</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">基本雷达图</div>
+            <div class="layui-card-body" style="position:relative;">
+                <div id="main1" style="width: 100%;height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">多雷达图</div>
+            <div class="layui-card-body" style="position:relative;">
+                <div id="main2" style="width: 100%;height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+    <!--    <div class="layui-col-md12">-->
+    <!--        <div class="layui-card">-->
+    <!--            <div class="layui-card-header">堆叠折线图</div>-->
+    <!--            <div class="layui-card-body" style="position:relative;">-->
+    <!--                <div id="main3" style="width: 100%;height: 400px;"></div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+</div>
+
+
+
+</div>
+<script src="/static/layui/layui.js"></script>
+<script src="/static/echarts/echarts.min.js"></script>
+<script>
+    layui.config({base: '/static/'}).extend({common: 'js/common'}).use(['jquery', 'common', 'element'], function() {
+        var element = layui.element;
+        var $ = layui.jquery;
+
+        var myChart1 = echarts.init($('#main1')[0]);
+        var myChart2 = echarts.init($('#main2')[0]);
+        // var myChart3 = echarts.init($('#main3')[0]);
+
+        // 指定图表的配置项和数据
+
+        var option1 = {
+            title: {
+                text: '基础雷达图'
+            },
+            tooltip: {},
+            legend: {
+                data: ['预算分配（Allocated Budget）', '实际开销（Actual Spending）']
+            },
+            radar: {
+                // shape: 'circle',
+                name: {
+                    textStyle: {
+                        color: '#fff',
+                        backgroundColor: '#999',
+                        borderRadius: 3,
+                        padding: [3, 5]
+                    }
+                },
+                indicator: [
+                    { name: '销售（sales）', max: 6500},
+                    { name: '管理（Administration）', max: 16000},
+                    { name: '信息技术（Information Techology）', max: 30000},
+                    { name: '客服（Customer Support）', max: 38000},
+                    { name: '研发（Development）', max: 52000},
+                    { name: '市场（Marketing）', max: 25000}
+                ]
+            },
+            series: [{
+                name: '预算 vs 开销（Budget vs spending）',
+                type: 'radar',
+                // areaStyle: {normal: {}},
+                data : [
+                    {
+                        value : [4300, 10000, 28000, 35000, 50000, 19000],
+                        name : '预算分配（Allocated Budget）'
+                    },
+                    {
+                        value : [5000, 14000, 28000, 31000, 42000, 21000],
+                        name : '实际开销（Actual Spending）'
+                    }
+                ]
+            }]
+        };
+
+        // var data = [
+        //     [[28604,77,17096869,'Australia',1990],[31163,77.4,27662440,'Canada',1990],[1516,68,1154605773,'China',1990],[13670,74.7,10582082,'Cuba',1990],[28599,75,4986705,'Finland',1990],[29476,77.1,56943299,'France',1990],[31476,75.4,78958237,'Germany',1990],[28666,78.1,254830,'Iceland',1990],[1777,57.7,870601776,'India',1990],[29550,79.1,122249285,'Japan',1990],[2076,67.9,20194354,'North Korea',1990],[12087,72,42972254,'South Korea',1990],[24021,75.4,3397534,'New Zealand',1990],[43296,76.8,4240375,'Norway',1990],[10088,70.8,38195258,'Poland',1990],[19349,69.6,147568552,'Russia',1990],[10670,67.3,53994605,'Turkey',1990],[26424,75.7,57110117,'United Kingdom',1990],[37062,75.4,252847810,'United States',1990]],
+        //     [[44056,81.8,23968973,'Australia',2015],[43294,81.7,35939927,'Canada',2015],[13334,76.9,1376048943,'China',2015],[21291,78.5,11389562,'Cuba',2015],[38923,80.8,5503457,'Finland',2015],[37599,81.9,64395345,'France',2015],[44053,81.1,80688545,'Germany',2015],[42182,82.8,329425,'Iceland',2015],[5903,66.8,1311050527,'India',2015],[36162,83.5,126573481,'Japan',2015],[1390,71.4,25155317,'North Korea',2015],[34644,80.7,50293439,'South Korea',2015],[34186,80.6,4528526,'New Zealand',2015],[64304,81.6,5210967,'Norway',2015],[24787,77.3,38611794,'Poland',2015],[23038,73.13,143456918,'Russia',2015],[19360,76.5,78665830,'Turkey',2015],[38225,81.4,64715810,'United Kingdom',2015],[53354,79.1,321773631,'United States',2015]]
+        // ];
+
+        var option2 = {
+            title: {
+                text: '多雷达图'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                x: 'center',
+                data:['某软件','某主食手机','某水果手机','降水量','蒸发量']
+            },
+            radar: [
+                {
+                    indicator: [
+                        {text: '品牌', max: 100},
+                        {text: '内容', max: 100},
+                        {text: '可用性', max: 100},
+                        {text: '功能', max: 100}
+                    ],
+                    center: ['25%','40%'],
+                    radius: 80
+                },
+                {
+                    indicator: [
+                        {text: '外观', max: 100},
+                        {text: '拍照', max: 100},
+                        {text: '系统', max: 100},
+                        {text: '性能', max: 100},
+                        {text: '屏幕', max: 100}
+                    ],
+                    radius: 80,
+                    center: ['50%','60%'],
+                },
+                {
+                    indicator: (function (){
+                        var res = [];
+                        for (var i = 1; i <= 12; i++) {
+                            res.push({text:i+'月',max:100});
+                        }
+                        return res;
+                    })(),
+                    center: ['75%','40%'],
+                    radius: 80
+                }
+            ],
+            series: [
+                {
+                    type: 'radar',
+                    tooltip: {
+                        trigger: 'item'
+                    },
+                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                    data: [
+                        {
+                            value: [60,73,85,40],
+                            name: '某软件'
+                        }
+                    ]
+                },
+                {
+                    type: 'radar',
+                    radarIndex: 1,
+                    data: [
+                        {
+                            value: [85, 90, 90, 95, 95],
+                            name: '某主食手机'
+                        },
+                        {
+                            value: [95, 80, 95, 90, 93],
+                            name: '某水果手机'
+                        }
+                    ]
+                },
+                {
+                    type: 'radar',
+                    radarIndex: 2,
+                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                    data: [
+                        {
+                            name: '降水量',
+                            value: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 75.6, 82.2, 48.7, 18.8, 6.0, 2.3],
+                        },
+                        {
+                            name:'蒸发量',
+                            value:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 35.6, 62.2, 32.6, 20.0, 6.4, 3.3]
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // var option3 = {
+        //     title: {
+        //         text: '堆叠区域图'
+        //     },
+        //     tooltip : {
+        //         trigger: 'axis',
+        //         axisPointer: {
+        //             type: 'cross',
+        //             label: {
+        //                 backgroundColor: '#6a7985'
+        //             }
+        //         }
+        //     },
+        //     legend: {
+        //         data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+        //     },
+        //     toolbox: {
+        //         feature: {
+        //             saveAsImage: {}
+        //         }
+        //     },
+        //     grid: {
+        //         left: '3%',
+        //         right: '4%',
+        //         bottom: '3%',
+        //         containLabel: true
+        //     },
+        //     xAxis : [
+        //         {
+        //             type : 'category',
+        //             boundaryGap : false,
+        //             data : ['周一','周二','周三','周四','周五','周六','周日']
+        //         }
+        //     ],
+        //     yAxis : [
+        //         {
+        //             type : 'value'
+        //         }
+        //     ],
+        //     series : [
+        //         {
+        //             name:'邮件营销',
+        //             type:'line',
+        //             stack: '总量',
+        //             areaStyle: {},
+        //             data:[120, 132, 101, 134, 90, 230, 210]
+        //         },
+        //         {
+        //             name:'联盟广告',
+        //             type:'line',
+        //             stack: '总量',
+        //             areaStyle: {},
+        //             data:[220, 182, 191, 234, 290, 330, 310]
+        //         },
+        //         {
+        //             name:'视频广告',
+        //             type:'line',
+        //             stack: '总量',
+        //             areaStyle: {},
+        //             data:[150, 232, 201, 154, 190, 330, 410]
+        //         },
+        //         {
+        //             name:'直接访问',
+        //             type:'line',
+        //             stack: '总量',
+        //             areaStyle: {normal: {}},
+        //             data:[320, 332, 301, 334, 390, 330, 320]
+        //         },
+        //         {
+        //             name:'搜索引擎',
+        //             type:'line',
+        //             stack: '总量',
+        //             label: {
+        //                 normal: {
+        //                     show: true,
+        //                     position: 'top'
+        //                 }
+        //             },
+        //             areaStyle: {normal: {}},
+        //             data:[820, 932, 901, 934, 1290, 1330, 1320]
+        //         }
+        //     ]
+        // };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart1.setOption(option1);
+        myChart2.setOption(option2);
+        // myChart3.setOption(option3);
+        window.addEventListener("resize", function () {
+            myChart1.resize();
+            myChart2.resize();
+            // myChart3.resize();
+            //myCharts是你的初始化echarts图表时取的名字
+        });
+    });
+</script>
+</body>
+</html>

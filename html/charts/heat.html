@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>折线图</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">水平热力图</div>
+            <div class="layui-card-body" style="position:relative;">
+                <div id="main1" style="width: 100%;height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">垂直热力图</div>
+            <div class="layui-card-body" style="position:relative;">
+                <div id="main2" style="width: 100%;height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+    <!--    <div class="layui-col-md12">-->
+    <!--        <div class="layui-card">-->
+    <!--            <div class="layui-card-header">堆叠折线图</div>-->
+    <!--            <div class="layui-card-body" style="position:relative;">-->
+    <!--                <div id="main3" style="width: 100%;height: 400px;"></div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+</div>
+
+
+
+</div>
+<script src="/static/layui/layui.js"></script>
+<script src="/static/echarts/echarts.min.js"></script>
+<script>
+    layui.config({base: '/static/'}).extend({common: 'js/common'}).use(['jquery', 'common', 'element'], function() {
+        var element = layui.element;
+        var $ = layui.jquery;
+
+        var myChart1 = echarts.init($('#main1')[0]);
+        var myChart2 = echarts.init($('#main2')[0]);
+        // var myChart3 = echarts.init($('#main3')[0]);
+
+        // 指定图表的配置项和数据
+
+        var hours = ['12a', '1a', '2a', '3a', '4a', '5a', '6a',
+            '7a', '8a', '9a','10a','11a',
+            '12p', '1p', '2p', '3p', '4p', '5p',
+            '6p', '7p', '8p', '9p', '10p', '11p'];
+        var days = ['Saturday', 'Friday', 'Thursday',
+            'Wednesday', 'Tuesday', 'Monday', 'Sunday'];
+
+        var data = [[0,0,5],[0,1,1],[0,2,0],[0,3,0],[0,4,0],[0,5,0],[0,6,0],[0,7,0],[0,8,0],[0,9,0],[0,10,0],[0,11,2],[0,12,4],[0,13,1],[0,14,1],[0,15,3],[0,16,4],[0,17,6],[0,18,4],[0,19,4],[0,20,3],[0,21,3],[0,22,2],[0,23,5],[1,0,7],[1,1,0],[1,2,0],[1,3,0],[1,4,0],[1,5,0],[1,6,0],[1,7,0],[1,8,0],[1,9,0],[1,10,5],[1,11,2],[1,12,2],[1,13,6],[1,14,9],[1,15,11],[1,16,6],[1,17,7],[1,18,8],[1,19,12],[1,20,5],[1,21,5],[1,22,7],[1,23,2],[2,0,1],[2,1,1],[2,2,0],[2,3,0],[2,4,0],[2,5,0],[2,6,0],[2,7,0],[2,8,0],[2,9,0],[2,10,3],[2,11,2],[2,12,1],[2,13,9],[2,14,8],[2,15,10],[2,16,6],[2,17,5],[2,18,5],[2,19,5],[2,20,7],[2,21,4],[2,22,2],[2,23,4],[3,0,7],[3,1,3],[3,2,0],[3,3,0],[3,4,0],[3,5,0],[3,6,0],[3,7,0],[3,8,1],[3,9,0],[3,10,5],[3,11,4],[3,12,7],[3,13,14],[3,14,13],[3,15,12],[3,16,9],[3,17,5],[3,18,5],[3,19,10],[3,20,6],[3,21,4],[3,22,4],[3,23,1],[4,0,1],[4,1,3],[4,2,0],[4,3,0],[4,4,0],[4,5,1],[4,6,0],[4,7,0],[4,8,0],[4,9,2],[4,10,4],[4,11,4],[4,12,2],[4,13,4],[4,14,4],[4,15,14],[4,16,12],[4,17,1],[4,18,8],[4,19,5],[4,20,3],[4,21,7],[4,22,3],[4,23,0],[5,0,2],[5,1,1],[5,2,0],[5,3,3],[5,4,0],[5,5,0],[5,6,0],[5,7,0],[5,8,2],[5,9,0],[5,10,4],[5,11,1],[5,12,5],[5,13,10],[5,14,5],[5,15,7],[5,16,11],[5,17,6],[5,18,0],[5,19,5],[5,20,3],[5,21,4],[5,22,2],[5,23,0],[6,0,1],[6,1,0],[6,2,0],[6,3,0],[6,4,0],[6,5,0],[6,6,0],[6,7,0],[6,8,0],[6,9,0],[6,10,1],[6,11,0],[6,12,2],[6,13,1],[6,14,3],[6,15,4],[6,16,0],[6,17,0],[6,18,0],[6,19,0],[6,20,1],[6,21,2],[6,22,2],[6,23,6]];
+
+        data = data.map(function (item) {
+            return [item[1], item[0], item[2] || '-'];
+        });
+
+        var option1 = {
+            tooltip: {
+                position: 'top'
+            },
+            animation: false,
+            grid: {
+                height: '50%',
+                y: '10%'
+            },
+            xAxis: {
+                type: 'category',
+                data: hours,
+                splitArea: {
+                    show: true
+                }
+            },
+            yAxis: {
+                type: 'category',
+                data: days,
+                splitArea: {
+                    show: true
+                }
+            },
+            visualMap: {
+                min: 0,
+                max: 10,
+                calculable: true,
+                orient: 'horizontal',
+                left: 'center',
+                bottom: '15%'
+            },
+            series: [{
+                name: 'Punch Card',
+                type: 'heatmap',
+                data: data,
+                label: {
+                    normal: {
+                        show: true
+                    }
+                },
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }]
+        };
+
+        // var data = [
+        //     [[28604,77,17096869,'Australia',1990],[31163,77.4,27662440,'Canada',1990],[1516,68,1154605773,'China',1990],[13670,74.7,10582082,'Cuba',1990],[28599,75,4986705,'Finland',1990],[29476,77.1,56943299,'France',1990],[31476,75.4,78958237,'Germany',1990],[28666,78.1,254830,'Iceland',1990],[1777,57.7,870601776,'India',1990],[29550,79.1,122249285,'Japan',1990],[2076,67.9,20194354,'North Korea',1990],[12087,72,42972254,'South Korea',1990],[24021,75.4,3397534,'New Zealand',1990],[43296,76.8,4240375,'Norway',1990],[10088,70.8,38195258,'Poland',1990],[19349,69.6,147568552,'Russia',1990],[10670,67.3,53994605,'Turkey',1990],[26424,75.7,57110117,'United Kingdom',1990],[37062,75.4,252847810,'United States',1990]],
+        //     [[44056,81.8,23968973,'Australia',2015],[43294,81.7,35939927,'Canada',2015],[13334,76.9,1376048943,'China',2015],[21291,78.5,11389562,'Cuba',2015],[38923,80.8,5503457,'Finland',2015],[37599,81.9,64395345,'France',2015],[44053,81.1,80688545,'Germany',2015],[42182,82.8,329425,'Iceland',2015],[5903,66.8,1311050527,'India',2015],[36162,83.5,126573481,'Japan',2015],[1390,71.4,25155317,'North Korea',2015],[34644,80.7,50293439,'South Korea',2015],[34186,80.6,4528526,'New Zealand',2015],[64304,81.6,5210967,'Norway',2015],[24787,77.3,38611794,'Poland',2015],[23038,73.13,143456918,'Russia',2015],[19360,76.5,78665830,'Turkey',2015],[38225,81.4,64715810,'United Kingdom',2015],[53354,79.1,321773631,'United States',2015]]
+        // ];
+
+        function getVirtulData(year) {
+            year = year || '2017';
+            var date = +echarts.number.parseDate(year + '-01-01');
+            var end = +echarts.number.parseDate((+year + 1) + '-01-01');
+            var dayTime = 3600 * 24 * 1000;
+            var data = [];
+            for (var time = date; time < end; time += dayTime) {
+                data.push([
+                    echarts.format.formatTime('yyyy-MM-dd', time),
+                    Math.floor(Math.random() * 10000)
+                ]);
+            }
+            return data;
+        }
+
+        var option2 = {
+            tooltip : {},
+            visualMap: {
+                min: 0,
+                max: 10000,
+                type: 'piecewise',
+                orient: 'vertical',
+                left: 'center',
+                left: 65,
+                textStyle: {
+                    color: '#000'
+                }
+            },
+            calendar: {
+                top: 40,
+                left: 'center',
+                bottom: 10,
+                orient: 'vertical',
+                cellSize: [13, 'auto'],
+                range: '2016',
+                itemStyle: {
+                    normal: {borderWidth: 0.5}
+                },
+                monthLabel: {
+                    nameMap: 'cn'
+                },
+                dayLabel: {
+                    firstDay: 1,
+                    nameMap: 'cn'
+                },
+                yearLabel: {show: false}
+            },
+            series: {
+                type: 'heatmap',
+                coordinateSystem: 'calendar',
+                data: getVirtulData(2016)
+            }
+        };
+
+        // var option3 = {
+        //     title: {
+        //         text: '堆叠区域图'
+        //     },
+        //     tooltip : {
+        //         trigger: 'axis',
+        //         axisPointer: {
+        //             type: 'cross',
+        //             label: {
+        //                 backgroundColor: '#6a7985'
+        //             }
+        //         }
+        //     },
+        //     legend: {
+        //         data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+        //     },
+        //     toolbox: {
+        //         feature: {
+        //             saveAsImage: {}
+        //         }
+        //     },
+        //     grid: {
+        //         left: '3%',
+        //         right: '4%',
+        //         bottom: '3%',
+        //         containLabel: true
+        //     },
+        //     xAxis : [
+        //         {
+        //             type : 'category',
+        //             boundaryGap : false,
+        //             data : ['周一','周二','周三','周四','周五','周六','周日']
+        //         }
+        //     ],
+        //     yAxis : [
+        //         {
+        //             type : 'value'
+        //         }
+        //     ],
+        //     series : [
+        //         {
+        //             name:'邮件营销',
+        //             type:'line',
+        //             stack: '总量',
+        //             areaStyle: {},
+        //             data:[120, 132, 101, 134, 90, 230, 210]
+        //         },
+        //         {
+        //             name:'联盟广告',
+        //             type:'line',
+        //             stack: '总量',
+        //             areaStyle: {},
+        //             data:[220, 182, 191, 234, 290, 330, 310]
+        //         },
+        //         {
+        //             name:'视频广告',
+        //             type:'line',
+        //             stack: '总量',
+        //             areaStyle: {},
+        //             data:[150, 232, 201, 154, 190, 330, 410]
+        //         },
+        //         {
+        //             name:'直接访问',
+        //             type:'line',
+        //             stack: '总量',
+        //             areaStyle: {normal: {}},
+        //             data:[320, 332, 301, 334, 390, 330, 320]
+        //         },
+        //         {
+        //             name:'搜索引擎',
+        //             type:'line',
+        //             stack: '总量',
+        //             label: {
+        //                 normal: {
+        //                     show: true,
+        //                     position: 'top'
+        //                 }
+        //             },
+        //             areaStyle: {normal: {}},
+        //             data:[820, 932, 901, 934, 1290, 1330, 1320]
+        //         }
+        //     ]
+        // };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart1.setOption(option1);
+        myChart2.setOption(option2);
+        // myChart3.setOption(option3);
+        window.addEventListener("resize", function () {
+            myChart1.resize();
+            myChart2.resize();
+            // myChart3.resize();
+            //myCharts是你的初始化echarts图表时取的名字
+        });
+    });
+</script>
+</body>
+</html>
